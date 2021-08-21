@@ -1,0 +1,28 @@
+figure(1) % Plot the real part using mesh
+mesh(xr,xi,real(f(z))); colormap([0 0 0]); hold on;
+xlabel(’\itx’); ylabel(’\ity’); title(’Real part’)
+xlim(bx(1:2)); ylim(bx(3:4)); zlim(bounds(1,:));
+plot3(x,zeros(size(x)),real(f(x)),’r’,’LineWidth’,lw); % Highlight real axis
+
+figure(2) % Plot the imaginary part using mesh
+mesh(xr,xi,imag(f(z))); colormap([0 0 0]); hold on;
+xlabel(’\itx’); ylabel(’\ity’); title(’Imaginary part’)
+xlim(bx(1:2)); ylim(bx(3:4)); zlim(bounds(2,:));
+plot3(x,zeros(size(x)),imag(f(x)),’r’,’LineWidth’,lw); % Highlight real axis
+
+figure(3) % Plot the magnitude as a surface
+% Increase resolution for smoother display
+x = linspace(bx(1),bx(2),nx*4); y = linspace(bx(3),bx(4),ny*4);
+[xr,xi] = meshgrid(x,y); z = complex(xr,xi);
+p = surf(xr,xi,abs(f(z)),angle(-f(z))); % Display the surface
+set (p,’EdgeColor’,’none’); colormap hsv(600); hold on;
+xlabel(’\itx’); ylabel(’\ity’); title(’Magnitude, with phase plot’)
+xlim(bx(1:2)); ylim(bx(3:4)); zlim(bounds(3,:));
+plot3(x,zeros(size(x)),abs(f(x)),’k’,’LineWidth’,lw); % Highlight real axis
+axes(’Position’,[0.05 0.05 .17 .17]) % Add color wheel for phase information
+[th,r] = meshgrid(linspace(-pi,pi),linspace(0,1));
+[X,Y] = pol2cart(th+pi,r);
+contourf(X,Y,th,100,’linestyle’,’none’); hold on % Show wheel colors
+plot([-1 1],[0,0],’k’); plot([0 0],[-1,1],’k’); % Show Re and Im axes
+plot(cos(0:0.01:2*pi),sin(0:0.01:2*pi),’k’); colormap hsv(600);
+axis equal; axis off
