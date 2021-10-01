@@ -14,12 +14,12 @@ tf = 1;
 
 % Grid points
 a = 0;
-b = 2*pi;
+b = 2;
 M = 40;
 
 % Initial condition
-u0 = @(x) 1/2 + sin(x);
-u0p = @(x) cos(x);
+u0 = @(x) 1 + tanh(x);
+u0p = @(x) sech(x).^2;
 
 % Characteristic equation
 f = @(x,x0,t) x0 + u0(x0)*t - x;
@@ -55,31 +55,31 @@ for k = 1:(tf/k)
 		U(i) = u0(x0);
 	end 
 	
-% 	plot(X,U)
-% 	pause(0.001)
-%	totU(k,:) = U;
+	plot(X,U)
+	pause(0.001)
+	totU(k,:) = U;
 end
 plot(X,U)
 
-% [X,T] = meshgrid(X,t);
-% subplot(2,1,1)
-% surf(X,T,totU,'EdgeColor','none')
-% xlim([0 2*pi])
-% ylim([0 tf])
-% zlim([-0.5 1.5])
-% xlabel('x')
-% ylabel('t')
-% zlabel('u(x,t)')
-% c = colorbar
-% c.Label.String = 'u(x,t)';
-% title('Approximate Solution Surface Plot')
-% subplot(2,1,2)
-% contourf(X,T,totU,20)
-% xlim([0 2*pi])
-% ylim([0 tf])
-% xlabel('x')
-% ylabel('t')
-% c = colorbar
-% c.Label.String = 'u(x,t)';
-% colormap gray;
-% title('Approximate Solution Contour Map')
+[X,T] = meshgrid(X,t);
+subplot(2,1,1)
+surf(X,T,totU,'EdgeColor','none')
+xlim([0 b])
+ylim([0 tf])
+zlim([-0.5 1.5])
+xlabel('x')
+ylabel('t')
+zlabel('u(x,t)')
+c = colorbar;
+c.Label.String = 'u(x,t)';
+title('Approximate Solution Surface Plot')
+subplot(2,1,2)
+contourf(X,T,totU,20)
+xlim([0 b])
+ylim([0 tf])
+xlabel('x')
+ylabel('t')
+c = colorbar
+c.Label.String = 'u(x,t)';
+colormap gray;
+title('Approximate Solution Contour Map')
