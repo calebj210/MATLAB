@@ -1,7 +1,10 @@
 %%
 % Homework 6, problem 2 code
+% Linear system solving using SD and CG
+%
 % Author: Caleb Jacobs
 % Date last modified: 6-10-2021
+
 close all
 clear
 
@@ -26,14 +29,34 @@ b = rand(N, 1);
 
 
 %% Driver
+figure()
 x1 = zeros(N, length(tau));
 for i = 1 : length(tau)
     [x1(:, i), r] = sd(A(:,:,i), b, x0, tol, maxIts);
     
     norm(A(:,:,i) * x1(:,i) - b)
-    semilogy(r)
+    semilogy(r, 'LineWidth', 2)
     hold on
 end
+title('Steepest Descent Norm(Residual) vs Iterations')
+xlabel('Iterations')
+ylabel('||r_k||')
+legend('\tau = 0.01', '\tau = 0.05', '\tau = 0.1', '\tau = 0.2')
+
+figure()
+x2 = zeros(N, length(tau));
+for i = 1 : length(tau)
+    [x2(:, i), r] = cg(A(:,:,i), b, x0, tol, maxIts);
+    
+    norm(A(:,:,i) * x2(:,i) - b)
+    semilogy(r, 'LineWidth', 2)
+    hold on
+end
+title('Conjugate Gradient Norm(Residual) vs Iterations')
+xlabel('Iterations k')
+ylabel('||r_k||')
+legend('\tau = 0.01', '\tau = 0.05', '\tau = 0.1', '\tau = 0.2')
+
 
 %% Generate random matrix with specified tau
 function A = genMat(n, tau, s)
@@ -74,26 +97,31 @@ function [x, r] = sd(A, b, x0, tol, maxIts)
 end
 
 %% Conjugate Gradient solver
-function x = cg(A, b, x0, tol, maxIts)
-    rk = b - A * x0;            % Initialize residual
-    pk = rk;                    % Initial conjugate vector
+function [x, r] = cg(A, b, x0, tol, maxIts)
+    rk  = b - A * x0;                   % Initial residual
+    p   = rk;                           % Initial search direction
+    rri = rk' * rk;                     % ||r_k||^2
     
-    r = zeros(maxIts + 1, 1);   % Initial residual norm storage
-    r(1) = norm(rk);            % Store first residual
+    r    = zeros(maxIts + 1, 1);        % Full residual storage
+    r(1) = sqrt(rri);                   % Store initial residual
     
-    for i = 1 : maxIts
-        ak = (rk' * rk) / (pk' * A * pk);   % Compute distance
+    for i = 1:maxIts
+        Ap  = A * p;                    % A*p
+        a   = rri / (p' * Ap);          % search length
+        x0  = x0 + a * p;               % Get next iterate
+        rk  = rk - a * Ap;              % Compute new residual
+        rrf = rk' * rk;                 % Compute new ||r_k||^2
         
-        x0 = x0 + ak * pk;          % Next iterate
-        rkNew = rk - ak * A * x0;   % Compute new residual
+        r(i + 1) = sqrt(rrf);           % Store new ||r_k||
         
         % Check convergence criteria
-        if rkNew < tol
+        if sqrt(rrf) < tol
             break;
         end
         
-        r(i + 1) = norm(rk);    % Store new residual
+        p = rk + (rrf / rri) * p;       % Compute next search direction
+        rri = rrf;                      % Save ||r_k||^2
     end
     
-    x = x0;                     % Return solution
+    x = x0;                             % Return solution
 end
