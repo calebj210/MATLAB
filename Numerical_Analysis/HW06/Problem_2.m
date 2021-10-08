@@ -7,13 +7,14 @@
 
 close all
 clear
+format longE
 
 %% Settings
 tau    = [0.01; 0.05; 0.1; 0.2];  % Cutoff values
 N      = 500;                     % Size of matrices
 seed   = 210;                     % Random number seed
 tol    = 1e-10;                   % Error Toloerance
-maxIts = 1000;                    % Maximum allowed iterations
+maxIts = 50;                      % Maximum allowed iterations
 x0     = zeros(N, 1);             % Initial solution guess
 
 
@@ -27,14 +28,20 @@ end
 % Construct b
 b = rand(N, 1);
 
+% True solutions for error calculations
+xTrue = zeros(N, length(tau));
+for i = 1 : length(tau)
+    xTrue(:, i) = A(:, :, i) \ b;
+end
 
 %% Driver
+% Run steepest descent
 figure()
 x1 = zeros(N, length(tau));
 for i = 1 : length(tau)
     [x1(:, i), r] = sd(A(:,:,i), b, x0, tol, maxIts);
     
-    norm(A(:,:,i) * x1(:,i) - b)
+%     norm(A(:,:,i) * x1(:,i) - b);
     semilogy(r, 'LineWidth', 2)
     hold on
 end
@@ -43,12 +50,13 @@ xlabel('Iterations')
 ylabel('||r_k||')
 legend('\tau = 0.01', '\tau = 0.05', '\tau = 0.1', '\tau = 0.2')
 
+% Run conjugate gradient
 figure()
 x2 = zeros(N, length(tau));
 for i = 1 : length(tau)
     [x2(:, i), r] = cg(A(:,:,i), b, x0, tol, maxIts);
     
-    norm(A(:,:,i) * x2(:,i) - b)
+%     norm(A(:,:,i) * x2(:,i) - b);
     semilogy(r, 'LineWidth', 2)
     hold on
 end
@@ -57,6 +65,29 @@ xlabel('Iterations k')
 ylabel('||r_k||')
 legend('\tau = 0.01', '\tau = 0.05', '\tau = 0.1', '\tau = 0.2')
 
+%% Compute error bounds
+% Get largest and smallest eigenvalues of each matrix
+lambda = zeros(length(tau), 2);
+for i = 1 : length(tau)
+    lambda(i, 1) = eigs(A(:,:,i), 1, 'smallestabs');   % Smallest modulus eigenvalue
+    lambda(i, 2) = eigs(A(:,:,i), 1, 'largestabs');    % Largest modulus eigenvalue
+end
+
+% Get condition number of each matrix
+conds = zeros(length(tau), 1);
+for i = 1 : length(tau)
+    conds(i) = cond(A(:,:,i));
+end
+
+% SD error coefficients
+sdErrCoef = zeros(length(tau), 1);
+for i = 1 : length(tau)
+    sdErrCoef(i) = sqrt((lambda(i, 2) - lambda(i, 1)) ./ (lambda(i, 2) + lambda(i, 1)));
+end
+sdErrCoef
+
+% CG error bounds
+c = (sqrt(conds) - 1) ./ (sqrt(conds) + 1)
 
 %% Generate random matrix with specified tau
 function A = genMat(n, tau, s)
