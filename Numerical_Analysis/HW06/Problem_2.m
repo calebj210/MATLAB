@@ -3,7 +3,7 @@
 % Linear system solving using SD and CG
 %
 % Author: Caleb Jacobs
-% Date last modified: 6-10-2021
+% Date last modified: 7-10-2021
 
 close all
 clear
@@ -14,7 +14,7 @@ tau    = [0.01; 0.05; 0.1; 0.2];  % Cutoff values
 N      = 500;                     % Size of matrices
 seed   = 210;                     % Random number seed
 tol    = 1e-10;                   % Error Toloerance
-maxIts = 50;                      % Maximum allowed iterations
+maxIts = 1000;                    % Maximum allowed iterations
 x0     = zeros(N, 1);             % Initial solution guess
 
 
@@ -78,6 +78,7 @@ conds = zeros(length(tau), 1);
 for i = 1 : length(tau)
     conds(i) = cond(A(:,:,i));
 end
+conds
 
 % SD error coefficients
 sdErrCoef = zeros(length(tau), 1);
@@ -91,17 +92,24 @@ c = (sqrt(conds) - 1) ./ (sqrt(conds) + 1)
 
 %% Generate random matrix with specified tau
 function A = genMat(n, tau, s)
-    rng(s);                             % Reset random # generator
-    tmp = 2 * rand(n-1, 1) - 1;         % Random vector
+    rng(s);                             % Seed random # generator
+    A = 2 * rand(n) - 1;                % Generate random matrix
     
-    % Strip random vector
-    for i = 1 : n-1
-        if abs(tmp(i)) > tau
-            tmp(i) = 0;
-        end
+    % Fix diagonal entries
+    for i = 1 : n
+        A(i,i) = 1;
     end
     
-    A = diag(tmp, -1) + diag(ones(n, 1)) + diag(tmp, 1); 
+    % Strip matrix and make symmetric
+    for i = 1 : n
+        for j = i + 1 : n
+            if abs(A(i, j)) > tau
+                A(i, j) = 0;
+            end
+            
+            A(j, i) = A(i, j);
+        end
+    end
 end
 
 %% Steepest Descent solver
