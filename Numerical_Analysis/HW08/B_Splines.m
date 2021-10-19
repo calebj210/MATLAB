@@ -46,13 +46,13 @@ end
 
 % Constuct A matrix
 function A = constructA(t, x)
-    m = length(t);          % Number of nodes
-    n = length(xi);         % Number of intervals + 1
-    h = t(2) - t(1);        % Data spacing
+    m = length(t);                  % Number of nodes
+    n = length(xi);                 % Number of intervals + 1
+    h = t(2) - t(1);                % Data spacing
     
-    idx = getIdx(t, x);     % Interval indices of data
+    idx = getIdx(t, x) + 1;         % Interval indices of data
     
-    A = sparse(m, n + 2);   % Initialize sparse A
+    A = spalloc(m, n + 2, 4 * m);   % Initialize sparse A
     for i = 1 : m
         for j = -1 : 2
             A(i, idx(i) + j) = B(t(i), x, idx, idx(i) + j);
