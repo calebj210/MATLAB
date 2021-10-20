@@ -1,7 +1,7 @@
 %%
 % B-Spline interpolation routine for Problem 3 of HW08
 % Author: Caleb Jacobs
-% Date last modified: 18-10-2021
+% Date last modified: 20-10-2021
 
 %% Clean workspace
 clear
@@ -11,27 +11,57 @@ format longE
 a = 0;          % Left side of interval
 b = 2*pi;       % Right side of interval
 n = 20;          % Number of intervals
-m = 30;         % Number of data points
-
-%% Function definition
-f = @(x) sin(x);
+m = 25;         % Number of data points
 
 %% Initialize data
 h  = (b - a) / m;               % Step size
 x  = linspace(a, b, n + 1);     % Interval boundaries
 t  = linspace(a, b, m);         % Nodes
-fi = f(t);                      % Date nodes
 
-A = constructA(t, x);
-bb = f(t)';
-c = A \ bb;
+A = constructA(t, x);           % Find A matrix for computing weights
+
+%% Interpololate sin(x)
+f = @(x) sin(x);                % Function definition
+bb = f(t)' + 0.05*randn(m, 1);  % Data function values
+c = A \ bb;                     % Interpolation weights
 
 figure(1)
-t = linspace(a, b, 1000);
-plot(t, S(t, x, c), t, f(t))
+T = linspace(a, b, 1000);
+plot(T, S(T, x, c), T, f(T), 'LineWidth', 1.5)
+title('sin(x) Interpolant with Noisy Data')
+xlabel('x')
+ylabel('f(x)')
+
+%% Interpolate exp(x)
+f = @(x) exp(x);                % Function definition
+bb = f(t)' + 6*randn(m, 1);     % Data function values
+c = A \ bb;                     % Interpolation weights
 
 figure(2)
+T = linspace(a, b, 1000);
+plot(T, S(T, x, c), T, f(T), 'LineWidth', 1.5)
+title('e^x Interpolant with Noisy Data')
+xlabel('x')
+ylabel('f(x)')
+
+%% Interpolate sin(x)/x
+f = @(x) sin(4*x) ./ (4*x + 1); % Function definition
+bb = f(t)' + 0.02*randn(m, 1);  % Data function values
+c = A \ bb;                     % Interpolation weights
+
+figure(3)
+T = linspace(a, b, 1000);
+plot(T, S(T, x, c), T, f(T), 'LineWidth', 1.5)
+title('sin(4x)/(4x+1) Interpolant with Noisy Data')
+xlabel('x')
+ylabel('f(x)')
+
+%% Plot matrix structure
+figure(4)
 spy(A)
+title('Spy plot of A matrix')
+xlabel('Columns')
+ylabel('Rows')
 
 %% Routine definitions
 % Basis spline
