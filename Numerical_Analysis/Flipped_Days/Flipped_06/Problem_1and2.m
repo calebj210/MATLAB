@@ -12,28 +12,30 @@ f = @(x) exp(sin(x));           % Function to interpolate
 
 a = 0;                          % Left boundary
 b = 2*pi;                       % Right boundary
-N = 10;                         % Number of nodes
+n = 10;                         % Number of nodes
+N = 1000;                       % Number of evaluation nodes
 
-x = linspace(a, b, N);          % Node set
+x = linspace(a, b, n);          % Node set
 y = f(x);                       % Data set
 
-t = linspace(a, b, 1000)';      % Evaluation set
+t = linspace(a, b, N)';      % Evaluation set
 
 %% Driver
 p = interp(t, y);
+% p = abs(ifft(fft(y) * N / n, N));
 
-figure(1)
+figure(1)s
 plot(t, p, t, f(t))
 
 %% FFT interpolant
 function F = interp(t, y)
     n = length(y);
     m = length(t);
-    c = fft(y) / n;
+    c = fftshift(fft(y) / n);
     k = [0 : n - 1]';
     
     F = zeros(m, 1);
     for i = 1 : m
-        F(i) = c * exp(1i * t(i) * k);
+        F(i) = abs(c * exp(1i * t(i) * k));
     end
 end
