@@ -18,14 +18,15 @@ N = 1000;                       % Number of evaluation nodes
 x = linspace(a, b, n);          % Node set
 y = f(x);                       % Data set
 
-t = linspace(a, b, N)';      % Evaluation set
+t = linspace(a, b, N)';         % Evaluation set
 
 %% Driver
-p = interp(t, y);
+p1 = interp(t, y)';
+p2 = interpft(y, N);
 % p = abs(ifft(fft(y) * N / n, N));
 
-figure(1)s
-plot(t, p, t, f(t))
+figure(1)
+plot(t, p1, t, p2, t, f(t))
 
 %% FFT interpolant
 function F = interp(t, y)

@@ -10,12 +10,12 @@ clear
 format longE
 a = 0;          % Left side of interval
 b = 2*pi;       % Right side of interval
-n = 20;          % Number of intervals
+n = 20;         % Number of intervals
 m = 25;         % Number of data points
 
 %% Initialize data
 h  = (b - a) / m;               % Step size
-x  = linspace(a, b, n + 1);     % Interval boundaries
+x  = linspace(a, b, n + 1)      % Interval boundaries
 t  = linspace(a, b, m);         % Nodes
 
 A = constructA(t, x);           % Find A matrix for computing weights
@@ -23,7 +23,7 @@ A = constructA(t, x);           % Find A matrix for computing weights
 %% Interpololate sin(x)
 f = @(x) sin(x);                % Function definition
 bb = f(t)' + 0.05*randn(m, 1);  % Data function values
-c = A \ bb;                     % Interpolation weights
+c = A \ bb                      % Interpolation weights
 
 figure(1)
 T = linspace(a, b, 1000);
@@ -35,7 +35,7 @@ ylabel('f(x)')
 %% Interpolate exp(x)
 f = @(x) exp(x);                % Function definition
 bb = f(t)' + 6*randn(m, 1);     % Data function values
-c = A \ bb;                     % Interpolation weights
+c = A \ bb                      % Interpolation weights
 
 figure(2)
 T = linspace(a, b, 1000);
@@ -47,7 +47,7 @@ ylabel('f(x)')
 %% Interpolate sin(x)/x
 f = @(x) sin(4*x) ./ (4*x + 1); % Function definition
 bb = f(t)' + 0.02*randn(m, 1);  % Data function values
-c = A \ bb;                     % Interpolation weights
+c = A \ bb                      % Interpolation weights
 
 figure(3)
 T = linspace(a, b, 1000);
