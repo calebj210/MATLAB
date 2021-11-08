@@ -1,7 +1,7 @@
 %%
 % Comparison of lagrange interpolant and boolean sum lagrange
 % Author: Caleb Jacobs
-% Date last modified: 04-11-2021
+% Date last modified: 05-11-2021
 
 %% Settings
 f = @(x, y) (x + y) ./ (1 + 25 * (x.^2 + y.^2));
@@ -28,13 +28,13 @@ ZB = evalBool(X, Y, x, y, f);
 errs(i, 1:2) = [norm(abs(Z(:) - ZI(:)), 2), norm(abs(Z(:) - ZB(:)), 2)];
 
 %% Generate error plots
-% f1 = figure(1);
-% surf(X, Y, abs(Z - ZI))
-% title(sprintf('Equispaced Lagrange Absolute Error n = %d', n))
+f1 = figure(1);
+surf(X, Y, abs(Z - ZI))
+title(sprintf('Equispaced Lagrange Absolute Error n = %d', n))
 
-% f2 = figure(2);
-% surf(X, Y, abs(Z - ZB))
-% title(sprintf('Equispaced Boolean Lagrange Absolute Error n = %d', n))
+f2 = figure(2);
+surf(X, Y, abs(Z - ZB))
+title(sprintf('Equispaced Boolean Lagrange Absolute Error n = %d', n))
 
 %% Part b
 % n = 30;
@@ -53,16 +53,16 @@ ZB = evalBool(X, Y, x, y, f);
 
 errs(i, 3:4) = [norm(abs(Z(:) - ZI(:)), 2), norm(abs(Z(:) - ZB(:)), 2)];
 
-% f3 = figure(3);
-% surf(X, Y, abs(Z - ZI))
-% title(sprintf('Chebyshev Lagrange Absolute Error n = %d', n))
+f3 = figure(3);
+surf(X, Y, abs(Z - ZI))
+title(sprintf('Chebyshev Lagrange Absolute Error n = %d', n))
 
-% f4 = figure(4);
-% surf(X, Y, abs(Z - ZB))
-% title(sprintf('Chebyshev Boolean Lagrange Absolute Error n = %d', n))
+f4 = figure(4);
+surf(X, Y, abs(Z - ZB))
+title(sprintf('Chebyshev Boolean Lagrange Absolute Error n = %d', n))
 
 %% Save figures
-% pause
+pause
 
 % saveas(f1, sprintf('images/EL%02d.png', n))
 % saveas(f2, sprintf('images/CL%02d.png', n))
@@ -70,6 +70,7 @@ errs(i, 3:4) = [norm(abs(Z(:) - ZI(:)), 2), norm(abs(Z(:) - ZB(:)), 2)];
 % saveas(f4, sprintf('images/CB%02d.png', n))
 end
 
+figure(10)
 semilogy(N, errs, 'LineWidth', 3)
 legend('Equispaced Lagrange', ...
        'Equispaced Boolean', ...
