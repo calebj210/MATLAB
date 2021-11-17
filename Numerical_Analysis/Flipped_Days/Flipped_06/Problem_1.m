@@ -5,25 +5,30 @@
 % Date last modified: 07-11-2021
 
 %% Parameters
-n = 5;
+n = 100000;
 
 %% Compute polynomials
-x = linspace(-1, 1, 2000)';
+x = linspace(-1, 1, 3000)';
+
+tic
 p = LP(x, n);
+toc
 
 %% Plot all polynomials
 figure(1)
-for i = 1 : n + 1
-    plot(x, p(:, i))
+for i = n-5 : n + 1
+    plot(x, p(:, i), 'LineWidth', 2)
     hold on
 end
+xlim([-1, 1])
+ylim([-2, 2])
 hold off
 
 %% Plot last polynomial
 figure(2)
-plot(x, p(:, end))
+plot(x, p(:, end), 'LineWidth', 2)
 xlim([-1, 1])
-ylim([-1, 1])
+ylim([-2, 2])
 
 %% Evaluate Legendre Polynomials
 function y = LP(x, N)
