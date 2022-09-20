@@ -28,7 +28,8 @@ for j = 3:500
     end
     % No convergence
     if (j==500)
-        [' ' num2str(j) ' terms computed']
+%         [' ' num2str(j) ' terms computed']
+        h = inf;
         return
     end
 end

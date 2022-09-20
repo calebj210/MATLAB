@@ -28,7 +28,8 @@ for n = 3:500
     end
     % No convergence
     if (n==500)
-        [' ' num2str(n) ' terms computed']
+%         [' ' num2str(n) ' terms computed']
+        h = inf;
         return
     end
 end
@@ -54,7 +55,8 @@ for n=3:500
     end
     % No convergence
     if (n==500)
-        [' ' num2str(n) ' terms computed']
+%         [' ' num2str(n) ' terms computed']
+        h = inf;
         return
     end
 end

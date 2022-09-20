@@ -9,7 +9,7 @@ function [nodes,weights] = gjquad_nw(alpha,beta,N)
 
 
 % Apply condition for quadrature rule to be valid
-if real(alpha)<=-1 || real(beta)<=-1,
+if real(alpha)<-1 || real(beta)<-1,
     ['Re(alpha) and Re(beta) must both be >= -1']
     return
 end

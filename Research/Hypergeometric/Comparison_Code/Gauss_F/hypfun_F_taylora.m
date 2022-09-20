@@ -20,7 +20,8 @@ if (c==fix(c) && c<=0)
         end
         % No convergence
         if (j==500)
-            [' ' num2str(j) ' terms computed']
+%             [' ' num2str(j) ' terms computed']
+            h = inf;
             return
         end
     end
@@ -40,7 +41,8 @@ else
         end
         % Apply stopping criterion
         if (j==500)
-            [' ' num2str(j) ' terms computed']
+%             [' ' num2str(j) ' terms computed']
+            h = inf;
             return
         end
     end

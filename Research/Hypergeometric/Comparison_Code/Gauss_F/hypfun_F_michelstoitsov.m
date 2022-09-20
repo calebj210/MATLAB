@@ -34,7 +34,8 @@ for j = 2:500
         break
     end
     if (j==500)
-        [' ' num2str(j) ' terms computed']
+%         [' ' num2str(j) ' terms computed']
+        h = inf;
         return
     end
 end

@@ -27,7 +27,8 @@ for j = 3:500
     end
     % No convergence
     if (j==500)
-        ['Reached ' num2str(j) ' limit']
+%         ['Reached ' num2str(j) ' limit']
+        h = inf;
         return
     end
 end
