@@ -6,6 +6,8 @@
 % Date last modified: 19-Sep-2022
 %%
 
+format longe
+
 % Define 30 test cases (a,b,c,z)
 test = [0.1,  0.2,  0.3,   0.5; ...
        -0.1,  0.2,  0.3,   0.5; ...
@@ -50,6 +52,7 @@ end
 
 % Begin testing
 results = zeros(30, 7);
+timings = zeros(30, 7);
 for i = 1 : 30
     a = test(i, 1);
     b = test(i, 2);
@@ -59,36 +62,54 @@ for i = 1 : 30
     gam = gamfun(c);
     
     % Pochammer
-    val = gam * hypfun_F_pochham(a, b, c, z, 1000);
+    tic
+        val = gam * hypfun_F_pochham(a, b, c, z, 300);
+    timings(i, 1) = toc;
     results(i, 1) = log10(abs(tru(i) - val));
 
     % Gauss-Jacobi
+    tic
     if (real(c - b - 1) >= -1 && real(b - 1) >= -1)
         val = gam * hypfun_F_gjquad(a, b, c, z, 16);
         results(i, 2) = log10(abs(tru(i) - val));
     end
+    timings(i, 2) = toc;
+
     
     % Taylor (a)
-    val = gam * hypfun_F_taylora(a, b, c, z, 1e-15);
+    tic
+        val = gam * hypfun_F_taylora(a, b, c, z, 1e-15);
+    timings(i, 3) = toc;
     results(i, 3) = log10(abs(tru(i) - val));
     
     % Taylor (b)
-    val = gam * hypfun_F_taylorb(a, b, c, z, 1e-15);
+    tic
+        val = gam * hypfun_F_taylorb(a, b, c, z, 1e-15);
+    timings(i, 4) = toc;
     results(i, 4) = log10(abs(tru(i) - val));
 
     % Single fraction
-    val = gam * hypfun_F_singlefraction(a, b, c, z, 1e-15);
+    toc
+        val = gam * hypfun_F_singlefraction(a, b, c, z, 1e-15);
+    timings(i, 5) = toc;
     results(i, 5) = log10(abs(tru(i) - val));
 
     % Buhring
-    val = gam * hypfun_F_buhring(a, b, c, z, 0.8, 1e-15);
+    tic
+        val = gam * hypfun_F_buhring(a, b, c, z, 0.8, 1e-15);
+    timings(i, 6) = toc;
     results(i, 6) = log10(abs(tru(i) - val));
 
     % Michel and Stoitsov
-    val = gam * hypfun_F_michelstoitsov(a, b, c, z, 1e-15);
+    tic
+        val = gam * hypfun_F_michelstoitsov(a, b, c, z, 1e-15);
+    timings(i, 7) = toc;
     results(i, 7) = log10(abs(tru(i) - val));
 end
 
 sprintf("Poc\tG-J\tT-a\tT-b\tSiF\tBuh\tM-S")
 results = [[1:30]' ceil(abs(min(results, 0)))];
 results = ["Test #", "Poc", "G-J", "T-a", "T-b", "SiF", "Buh", "M-S"; results]
+
+timings = [[1:30]' timings];
+timings = ["Test #", "Poc", "G-J", "T-a", "T-b", "SiF", "Buh", "M-S"; timings]
