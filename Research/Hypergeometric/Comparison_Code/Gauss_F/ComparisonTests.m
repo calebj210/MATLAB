@@ -90,4 +90,5 @@ for i = 1 : 30
 end
 
 sprintf("Poc\tG-J\tT-a\tT-b\tSiF\tBuh\tM-S")
-resutls = ceil(abs(min(results, 0)))
+results = [[1:30]' ceil(abs(min(results, 0)))];
+results = ["Test #", "Poc", "G-J", "T-a", "T-b", "SiF", "Buh", "M-S"; results]
