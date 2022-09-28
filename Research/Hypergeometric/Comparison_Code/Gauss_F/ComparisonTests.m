@@ -3,7 +3,7 @@
 %
 %
 % Author: Caleb Jacobs
-% Date last modified: 19-Sep-2022
+% Date last modified: 27-Sep-2022
 %%
 
 format longe
@@ -47,8 +47,12 @@ for i = 1 : 30
     b = test(i, 2);
     c = test(i, 3);
     z = test(i, 4);
-    tru(i) = hypergeom([a,b], c, z);
+    tic
+        tru(i) = hypergeom([a,b], c, z);
+    tmp(i) = toc;
 end
+
+tmp
 
 % Begin testing
 results = zeros(30, 7);
@@ -63,7 +67,7 @@ for i = 1 : 30
     
     % Pochammer
     tic
-        val = gam * hypfun_F_pochham(a, b, c, z, 300);
+        val = gam * hypfun_F_pochham(a, b, c, z, 500);
     timings(i, 1) = toc;
     results(i, 1) = log10(abs(tru(i) - val));
 
@@ -109,7 +113,11 @@ end
 
 sprintf("Poc\tG-J\tT-a\tT-b\tSiF\tBuh\tM-S")
 results = [[1:30]' ceil(abs(min(results, 0)))];
-results = ["Test #", "Poc", "G-J", "T-a", "T-b", "SiF", "Buh", "M-S"; results]
+results(isinf(results)) = 0;
 
 timings = [[1:30]' timings];
-timings = ["Test #", "Poc", "G-J", "T-a", "T-b", "SiF", "Buh", "M-S"; timings]
+timings(results == 0) = 0;
+timings(:, end) = tmp;
+
+results
+timings
