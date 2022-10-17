@@ -3,7 +3,7 @@
 %
 %
 % Author: Caleb Jacobs
-% Date last modified: 17-Oct-2022
+% Date last modified: 27-Sep-2022
 %%
 
 format longe
@@ -55,8 +55,8 @@ end
 tmp
 
 % Begin testing
-results = zeros(30, 8);
-timings = zeros(30, 8);
+results = zeros(30, 7);
+timings = zeros(30, 7);
 for i = 1 : 30
     a = test(i, 1);
     b = test(i, 2);
@@ -72,62 +72,52 @@ for i = 1 : 30
     results(i, 1) = log10(abs(tru(i) - val));
 
     % End-corrected trapezoidal rule
-    fprintf("Before: i = %d\n",i)
     tic
-        try
-            if (norm([a,b,c,z]) < 200)
-                val = gam * hypfun_F_trapz(a, b, c, z, 10);
-            else 
-                val = nan;
-            end
-        catch bleh
-            val = nan;
-        end
-    timings(i, 2) = toc;
-    results(i, 2) = log10(abs(tru(i) - val));
-    fprintf("After: i = %d\n\n",i)
+        val = gam * hypfun_F_pochham(a, b, c, z, 500);
+    timings(i, 1) = toc;
+    results(i, 1) = log10(abs(tru(i) - val));
 
     % Gauss-Jacobi
     tic
     if (real(c - b - 1) >= -1 && real(b - 1) >= -1)
         val = gam * hypfun_F_gjquad(a, b, c, z, 16);
-        results(i, 3) = log10(abs(tru(i) - val));
+        results(i, 2) = log10(abs(tru(i) - val));
     end
-    timings(i, 3) = toc;
+    timings(i, 2) = toc;
 
     
     % Taylor (a)
     tic
         val = gam * hypfun_F_taylora(a, b, c, z, 1e-15);
-    timings(i, 4) = toc;
-    results(i, 4) = log10(abs(tru(i) - val));
+    timings(i, 3) = toc;
+    results(i, 3) = log10(abs(tru(i) - val));
     
     % Taylor (b)
     tic
         val = gam * hypfun_F_taylorb(a, b, c, z, 1e-15);
-    timings(i, 5) = toc;
-    results(i, 5) = log10(abs(tru(i) - val));
+    timings(i, 4) = toc;
+    results(i, 4) = log10(abs(tru(i) - val));
 
     % Single fraction
-    tic
+    toc
         val = gam * hypfun_F_singlefraction(a, b, c, z, 1e-15);
-    timings(i, 6) = toc;
-    results(i, 6) = log10(abs(tru(i) - val));
+    timings(i, 5) = toc;
+    results(i, 5) = log10(abs(tru(i) - val));
 
     % Buhring
     tic
         val = gam * hypfun_F_buhring(a, b, c, z, 0.8, 1e-15);
-    timings(i, 7) = toc;
-    results(i, 7) = log10(abs(tru(i) - val));
+    timings(i, 6) = toc;
+    results(i, 6) = log10(abs(tru(i) - val));
 
     % Michel and Stoitsov
     tic
         val = gam * hypfun_F_michelstoitsov(a, b, c, z, 1e-15);
-    timings(i, 8) = toc;
-    results(i, 8) = log10(abs(tru(i) - val));
+    timings(i, 7) = toc;
+    results(i, 7) = log10(abs(tru(i) - val));
 end
 
-fprintf("    Tst   Poc   Trp   G-J   T-a   T-b   SiF   Buh   M-S\n")
+sprintf("Poc\tG-J\tT-a\tT-b\tSiF\tBuh\tM-S")
 results = [[1:30]' ceil(abs(min(results, 0)))];
 results(isinf(results)) = 0;
 
@@ -135,5 +125,5 @@ timings = [[1:30]' timings];
 timings(results == 0) = 0;
 timings(:, end) = tmp;
 
-disp(results)
-disp(timings)
+results
+timings
