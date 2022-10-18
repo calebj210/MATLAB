@@ -1,4 +1,4 @@
-function [h] = hypfun_F_trapz(a,b,c,z,N)
+function [h] = hypfun_F_trapz(a,b,c,z,N,n,ra,rb,pa,pb)
 % function [h] = hypfun_F_trapz(a,b,c,z,N)
 % 
 % Computes the hypergeometric function \mathrm{F}(a,b;c;z)
@@ -15,5 +15,5 @@ f = @(Z) (1 - Z).^(-a);
 % Compute F using end correct trapezoidal rule
 h = 1 / gamfun(b) / gamfun(c - b) / ...
     (z .^ (c - 1))                * ...
-    hyp_integrate(0, z, f, al, be);
+    hyp_integrate(0, z, f, al, be, N, n, ra, rb, pa, pb);
 end

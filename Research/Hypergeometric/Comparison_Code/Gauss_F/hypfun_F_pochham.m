@@ -1,24 +1,23 @@
-function [h] = hypfun_F_pochham(a,b,c,Z,N)
+function [h] = hypfun_F_pochham(a,b,c,Z,N,r1,r2,cent)
 % function [h] = hypfun_F_pochham(a,b,c,z,N)
 % 
 % Computes the hypergeometric function \mathrm{F}(a,b;c;z)
 % using a Pochhammer integral approach.
 %
 % Author: Caleb Jacobs, Cecile Piret
-% Date last modified: 19-Sep-2022
-
+% Date last modified: 17-Oct-2022
 
 % Define base integrand
 al = b - 1;
 be = c - b - 1;
 f = @(t) (t.^al) .* (1 - t).^be .* (1 - Z*t).^(-a);
-x = @(t) -4/5*sin(2*t) + 1/2;
-y = @(t) 1/10*sin(t) - 1/5*sin(3*t) - 1/10*sin(5*t);
+x = @(t) -4/5 * r1 * sin(2*t) + cent;
+y = @(t) r2 * (1/10*sin(t) - 1/5*sin(3*t) - 1/10*sin(5*t));
 z = @(t) x(t) + 1i*y(t);
 
 % Computing dz for the trapezoidal rule
-dx = @(t) -8/5*cos(2*t);
-dy = @(t) 1/10*cos(t) - 3/5*cos(3*t) - 1/2*cos(5*t);
+dx = @(t) r1 * (-8/5*cos(2*t));
+dy = @(t) r2 * (1/10*cos(t) - 3/5*cos(3*t) - 1/2*cos(5*t));
 dz = @(t) dx(t) + 1i*dy(t);
 
 % Computing the function values on the correct sheets
@@ -34,6 +33,8 @@ f1 = f(z1);
 f2 = exp(-1i*2*pi*be)*f(z2);
 f3 = exp(1i*2*pi*al)*exp(-1i*2*pi*be)*f(z3);
 f4 = exp(1i*2*pi*al)*f(z4);
+
+% plot(x(t), y(t))
 
 % Compute Pochhammer contour integral
 h = 1 / gamfun(b) / gamfun(c - b) * ...

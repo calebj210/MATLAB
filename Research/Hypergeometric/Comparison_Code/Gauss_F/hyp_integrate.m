@@ -1,4 +1,4 @@
-function approx = hyp_integrate(za,zb,f,al,be)
+function approx = hyp_integrate(za,zb,f,al,be,N,n,ra,rb,pa,pb)
 %Linked to my CP221006 handout.
 %Function that evaluates using end correction the integral
 %
@@ -20,24 +20,24 @@ function approx = hyp_integrate(za,zb,f,al,be)
 plot_the_stencil = 0;
 
 %% Parameters
-N=15; %number of points inside the domain of integration
+% N=15; %number of points inside the domain of integration
 
 h = (zb-za)/(N+1);
-ra = 3;%round(2+1/abs(5*h));
-rb = 3;%round(2+1/abs(5*h));
-n = 20;
+% ra = 3;%round(2+1/abs(5*h));
+% rb = 3;%round(2+1/abs(5*h));
+% n = 20;
 %% End of Parameters
 
-fa = @(Z) f(Z).*(Z-zb).^be;
-fb = @(Z) f(Z).*(Z-za).^al;
+fa  = @(Z) f(Z).*(Z-zb).^be;
+fb  = @(Z) f(Z).*(Z-za).^al;
 fab = @(Z) f(Z).*((Z-za).^al).*((Z-zb).^be);
 
 t=linspace(0,2*pi,n+1)'; t(end)=[];
 zsa = za+abs(h)*ra*exp(1i*t);
 zsb = zb+abs(h)*rb*exp(1i*t);
 
-pa=3;
-pb=3;
+% pa = 3;
+% pb = 3;
 
 %Correction stencils
 Wa = stencil_circ(n,al,h/abs(h),pa,(zsa-za)/(abs(h)));

@@ -52,11 +52,9 @@ for i = 1 : 30
     tmp(i) = toc;
 end
 
-tmp
-
 % Begin testing
-results = zeros(30, 8);
-timings = zeros(30, 8);
+results = zeros(30, 7);
+timings = zeros(30, 7);
 for i = 1 : 30
     a = test(i, 1);
     b = test(i, 2);
@@ -67,25 +65,25 @@ for i = 1 : 30
     
     % Pochammer
     tic
-        val = gam * hypfun_F_pochham(a, b, c, z, 500);
+        val = gam * hypfun_F_pochham(a, b, c, z, 1000, 1, 1, 1/2);
     timings(i, 1) = toc;
     results(i, 1) = log10(abs(tru(i) - val));
 
     % End-corrected trapezoidal rule
-    fprintf("Before: i = %d\n",i)
     tic
-        try
-            if (norm([a,b,c,z]) < 200)
-                val = gam * hypfun_F_trapz(a, b, c, z, 10);
-            else 
-                val = nan;
-            end
-        catch bleh
-            val = nan;
-        end
+    fprintf("i = %d\n", i)
+%         try
+%             if (norm([a,b,c,z]) < 200)
+                %           hypfun_F_trapz(a, b, c, z, N,  n, ra,rb,pa,pb)
+                val = gam * hypfun_F_trapz(a, b, c, z, 30, 25, 3, 3, 3, 3);
+%             else 
+%                 val = nan;
+%             end
+%         catch bleh
+%             val = nan;
+%         end
     timings(i, 2) = toc;
     results(i, 2) = log10(abs(tru(i) - val));
-    fprintf("After: i = %d\n\n",i)
 
     % Gauss-Jacobi
     tic
@@ -121,13 +119,13 @@ for i = 1 : 30
     results(i, 7) = log10(abs(tru(i) - val));
 
     % Michel and Stoitsov
-    tic
-        val = gam * hypfun_F_michelstoitsov(a, b, c, z, 1e-15);
-    timings(i, 8) = toc;
-    results(i, 8) = log10(abs(tru(i) - val));
+%     tic
+%         val = gam * hypfun_F_michelstoitsov(a, b, c, z, 1e-15);
+%     timings(i, 8) = toc;
+%     results(i, 8) = log10(abs(tru(i) - val));
 end
 
-fprintf("    Tst   Poc   Trp   G-J   T-a   T-b   SiF   Buh   M-S\n")
+fprintf("    Tst   Poc   Trp   G-J   T-a   T-b   SiF   Buh\n")
 results = [[1:30]' ceil(abs(min(results, 0)))];
 results(isinf(results)) = 0;
 
@@ -136,4 +134,4 @@ timings(results == 0) = 0;
 timings(:, end) = tmp;
 
 disp(results)
-disp(timings)
+% disp(timings)
