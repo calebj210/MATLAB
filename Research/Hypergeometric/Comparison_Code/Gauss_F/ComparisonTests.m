@@ -72,16 +72,16 @@ for i = 1 : 30
     % End-corrected trapezoidal rule
     tic
     fprintf("i = %d\n", i)
-%         try
-%             if (norm([a,b,c,z]) < 200)
+        try
+            if (norm([a,b,c,z]) < 200)
                 %           hypfun_F_trapz(a, b, c, z, N,  n, ra,rb,pa,pb)
-                val = gam * hypfun_F_trapz(a, b, c, z, 30, 25, 3, 3, 3, 3);
-%             else 
-%                 val = nan;
-%             end
-%         catch bleh
-%             val = nan;
-%         end
+                val = gam * hypfun_F_trapz(a, b, c, z, 30, 25, 3, 3, 4, 4);
+            else 
+                val = nan;
+            end
+        catch bleh
+            val = nan;
+        end
     timings(i, 2) = toc;
     results(i, 2) = log10(abs(tru(i) - val));
 
