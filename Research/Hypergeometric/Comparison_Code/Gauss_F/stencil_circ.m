@@ -19,16 +19,6 @@ R = zk(1);% R is the radius of the correction stencil
 %Calculate stencil weights
 Rinv = diag(1./(R.^ord));
 s = -gam - ord(:);
-% switch p
-%     case 1
-%         vS  = zeta(s) .* (dir .^ ord(:));
-%     case 2
-%         vS  = (zeta(s) - 1) .* (dir .^ ord(:));
-%     case 3
-%         vS  = (zeta(s) - 1 - 2.^(-s)) .* (dir .^ ord(:));
-%     otherwise
-%         vS = hurwitzZeta(s,p).*(dir.^ord(:));
-% end
 vS = intZeta(s, p) .* (dir .^ ord(:));
 RHS = Rinv*vS;
 W = 1/lzk*fft(RHS);

@@ -42,6 +42,7 @@ test = [0.1,  0.2,  0.3,   0.5; ...
 
 % Compute "true" solutions
 tru = zeros(30, 1);
+tmp = zeros(30, 1);
 for i = 1 : 30
     a = test(i, 1);
     b = test(i, 2);
@@ -51,6 +52,9 @@ for i = 1 : 30
         tru(i) = hypergeom([a,b], c, z);
     tmp(i) = toc;
 end
+
+% Patched true solution
+tru(25) = 0.9326335692419980 + 1i * 0.4752005385816226;
 
 % Begin testing
 results = zeros(30, 7);
@@ -71,17 +75,8 @@ for i = 1 : 30
 
     % End-corrected trapezoidal rule
     tic
-    fprintf("i = %d\n", i)
-        try
-            if (norm([a,b,c,z]) < 200)
-                %           hypfun_F_trapz(a, b, c, z, N,  n, ra,rb,pa,pb)
-                val = gam * hypfun_F_trapz(a, b, c, z, 30, 25, 3, 3, 4, 4);
-            else 
-                val = nan;
-            end
-        catch bleh
-            val = nan;
-        end
+        %           hypfun_F_trapz(a, b, c, z, N,  n, ra,rb,pa,pb)
+        val = gam * hypfun_F_trapz(a, b, c, z, 30, 25, 3, 3, 3, 3);
     timings(i, 2) = toc;
     results(i, 2) = log10(abs(tru(i) - val));
 
@@ -129,9 +124,9 @@ fprintf("    Tst   Poc   Trp   G-J   T-a   T-b   SiF   Buh\n")
 results = [[1:30]' ceil(abs(min(results, 0)))];
 results(isinf(results)) = 0;
 
-timings = [[1:30]' timings];
+timings = [[1:30]' log10(timings)];
 timings(results == 0) = 0;
 timings(:, end) = tmp;
 
 disp(results)
-% disp(timings)
+% disp(round(timings))
