@@ -1,4 +1,4 @@
-function [Df,radius] = compute_pFq_circle(f,c,d,nxy,h,sing_info)
+        function [Df,radius] = compute_pFq_circle(f,c,d,nxy,h,sing_info)
 
 % INPUT: f: function on which to apply the integral operator
 % a,b : The last elements of a abd of b will provide the exponents in the integrand
@@ -344,4 +344,4 @@ Dmat = G_center+diag(Cb)*(G_b(ind_z_list,:))+diag(Ca)*G2(ind_z_list,:)-diag(Ca)*
 % scatter(Dj,S1-Di,20,log10(abs(Dv)))
 
 Int= Dmat*fvals(:);
-Df = (gamma(d(end))/(gamma(c(end))*gamma(d(end)-c(end))))*(Int).*(z(ind_z_list(:)).^(1-d(end)));
+Df = (gamfun(d(end))/(gamfun(c(end))*gamfun(d(end)-c(end))))*(Int).*(z(ind_z_list(:)).^(1-d(end)));

@@ -14,7 +14,7 @@ for h_index = 1:length(h_list)
 
     %Approximate pFq([a];[b];x)
     a = [1.6]; %1F1
-%     a = [2.5 3.6]; %2F1
+    %a = [2.5 3.6]; %2F1
     b = [1.8];
 
     if length(a)==1 & length(b)==1 %1F1(a;b;x)
@@ -28,8 +28,8 @@ for h_index = 1:length(h_list)
     al = a(end)-1;
     bet = b(end)-a(end)-1;
 
-    [Df,radius] = compute_pFq_circle(f,a,b,nxy,h,sing_info);
+    [Df,radius] = compute_pFq_circle(f,a,b,nxy,h,sing_info)
 
-    display_function(Df,true_f,a,b,nxy,h,bounds,h_index,radius,sing_info); % Create the three subplots
+%     display_function(Df,true_f,a,b,nxy,h,bounds,h_index,radius,sing_info); % Create the three subplots
 
 end

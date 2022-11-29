@@ -67,16 +67,29 @@ for i = 1 : 30
 
     gam = gamfun(c);
     
-    % Pochammer
-    tic
-        val = gam * hypfun_F_pochham(a, b, c, z, 1000, 1, 1, 1/2);
-    timings(i, 1) = toc;
-    results(i, 1) = log10(abs(tru(i) - val));
+%     % Pochammer
+%     tic
+%         val = gam * hypfun_F_pochham(a, b, c, z, 1000, 1, 1, 1/2);
+%     timings(i, 1) = toc;
+%     results(i, 1) = log10(abs(tru(i) - val));
 
     % End-corrected trapezoidal rule
     tic
         %           hypfun_F_trapz(a, b, c, z, N,  n, ra,rb,pa,pb)
         val = gam * hypfun_F_trapz(a, b, c, z, 30, 25, 3, 3, 3, 3);
+    timings(i, 1) = toc;
+    results(i, 1) = log10(abs(tru(i) - val));
+
+    % Repeated decomposition
+    tic
+        f = @(x) (1 - x).^(-a);
+        sing_info = [1, -a];
+        h   = 0.05;
+        nx  = 50;
+        bx  = [-nx*h/2,nx*h/2,-nx*h/2,nx*h/2]; % Domain surrounding origin to be displayed
+        nxy = sign(bx).*ceil(abs(bx)/h);
+
+        val = compute_pFq_circle(f, [a,b], c, nxy, h, sing_info);
     timings(i, 2) = toc;
     results(i, 2) = log10(abs(tru(i) - val));
 
@@ -120,7 +133,7 @@ for i = 1 : 30
 %     results(i, 8) = log10(abs(tru(i) - val));
 end
 
-fprintf("    Tst   Poc   Trp   G-J   T-a   T-b   SiF   Buh\n")
+fprintf("    Tst   Trp   Rep   G-J   T-a   T-b   SiF   Buh\n")
 results = [[1:30]' ceil(abs(min(results, 0)))];
 results(isinf(results)) = 0;
 
