@@ -45,7 +45,7 @@ Ib_vals= (z-za).^al; Ib_vals(z==za)=0;
 
 %Nodes inside domain
 ind_z_list = find(real(Zinteger_mat)>=nxy(1) & real(Zinteger_mat)<=nxy(2) & ...
-    imag(Zinteger_mat)>=nxy(3) & imag(Zinteger_mat)<=nxy(4));
+                  imag(Zinteger_mat)>=nxy(3) & imag(Zinteger_mat)<=nxy(4));
 
 %Global Operator matrices
 G1 = sparse(length(ind_z_list),length(Zmat)); %Standard Corrections
@@ -86,20 +86,20 @@ Zinteger_sa = Zinteger_mat(ind_a);
 Zinteger_sb = Zinteger_mat(ind_b);
 Zinteger_sc = Zinteger_mat(ind_c);
 
-cw_lft = stencil_circle(0,1,pc,Zinteger_sc); %Correction at Singularity-free ends
-cw_rt = stencil_circle(0,-1,pc,Zinteger_sc);
+cw_lft = stencil_circle(0, 1, pc,Zinteger_sc); %Correction at Singularity-free ends
+cw_rt  = stencil_circle(0,-1, pc,Zinteger_sc);
 cw_top = stencil_circle(0,-1i,pc,Zinteger_sc);
-cw_bot = stencil_circle(0,1i,pc,Zinteger_sc);
+cw_bot = stencil_circle(0, 1i,pc,Zinteger_sc);
 
-cwa_lft = stencil_circle(al,1,pa,Zinteger_sa); %Correction at origin
-cwa_rt = stencil_circle(al,-1,pa,Zinteger_sa);
+cwa_lft = stencil_circle(al, 1, pa,Zinteger_sa); %Correction at origin
+cwa_rt  = stencil_circle(al,-1, pa,Zinteger_sa);
 cwa_top = stencil_circle(al,-1i,pa,Zinteger_sa);
-cwa_bot = stencil_circle(al,1i,pa,Zinteger_sa);
+cwa_bot = stencil_circle(al, 1i,pa,Zinteger_sa);
 
-cwb_lft = stencil_circle(bet,1,pb,Zinteger_sb); %Correction at evaluation point
-cwb_rt = stencil_circle(bet,-1,pb,Zinteger_sb);
-cwb_top =stencil_circle(bet,-1i,pb,Zinteger_sb);
-cwb_bot =stencil_circle(bet,1i,pb,Zinteger_sb);
+cwb_lft = stencil_circle(bet, 1, pb,Zinteger_sb); %Correction at evaluation point
+cwb_rt  = stencil_circle(bet,-1, pb,Zinteger_sb);
+cwb_top = stencil_circle(bet,-1i,pb,Zinteger_sb);
+cwb_bot = stencil_circle(bet, 1i,pb,Zinteger_sb);
 
 
 r = min(num_h_prob,sing_pos/h);%radius for central node algorithm

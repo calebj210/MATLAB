@@ -10,13 +10,15 @@ function [g] = gamfun(z)
 % 
 % Copyright John W. Pearson 2014
 
-
-if real(z)<0.5 % transformation
-    g = pi/(sin(pi*z)*gamfun(1-z));
-elseif imag(z)==0 && real(z)==fix(real(z)) % integer case
-    g = factorial(z-1); % use built-in MATLAB routine
-elseif abs(z)>80
-    g = gamfun_stirlingbernoulli(z,eps);
-else
-    g = gamfun_godfrey(z);
+g = zeros(size(z));
+for i = 1 : length(z)
+    if real(z(i))<0.5 % transformation
+        g(i) = pi/(sin(pi*z(i))*gamfun(1-z(i)));
+    elseif imag(z(i))==0 && real(z(i))==fix(real(z(i))) % integer case
+        g(i) = factorial(z(i)-1); % use built-in MATLAB routine
+    elseif abs(z(i))>80
+        g(i) = gamfun_stirlingbernoulli(z(i),eps);
+    else
+        g(i) = gamfun_godfrey(z(i));
+    end
 end

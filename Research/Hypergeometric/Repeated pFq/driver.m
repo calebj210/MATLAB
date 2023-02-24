@@ -46,7 +46,7 @@ for h_index = 1:length(h_list)
         2/3, 1, 4/3, exp(1i * pi/3)];                    % 30
 %     a = [1.6]; %1F1
     
-    k = 25;
+    k = 3;
 
     a = [test(k,1) test(k,2)]; %2F1
     b = [test(k,3)];
