@@ -1,5 +1,4 @@
-        function [Df,radius] = compute_pFq_circle(f,c,d,nxy,h,sing_info)
-
+function [Df,radius] = compute_pFq_circle(f,c,d,nxy,h,sing_info)
 % INPUT: f: function on which to apply the integral operator
 % a,b : The last elements of a abd of b will provide the exponents in the integrand
 % nxy : domain: number of nodes in left and right in the x and bottom and
@@ -63,15 +62,15 @@ num_h_prob = 11;% Will now depend on alpha and beta
 
 
 %%Computes the endpoint correction stencils
-ns = 25; %Number of nodes in the stencil
+ns = 20; %Number of nodes in the stencil
 t=linspace(0,2*pi,ns+1)'; t(end)=[];
 
-Ra = 3; %Radius of stencil around za
-Rb = 3; %Radius of stencil around zb
-Rc = 3; %Radius of stencil around corner
-pa = 2; %Node at which the TR starts from za
-pb = 2; %Node at which the TR starts from zb
-pc = 2; %Node at which the TR starts from a corner
+Ra = 4; %Radius of stencil around za
+Rb = 4; %Radius of stencil around zb
+Rc = 4; %Radius of stencil around corner
+pa = 3; %Node at which the TR starts from za
+pb = 3; %Node at which the TR starts from zb
+pc = 3; %Node at which the TR starts from a corner
 
 
 ind_a = find(ismember(Zinteger_mat,(round(Ra*cos(t))+1i*round(Ra*sin(t)))));
@@ -334,7 +333,6 @@ for ind_z=1:length(ind_z_list)
         end
         Ca(ind_z) = 1;
     end
-
 end
 Dmat = G_center+diag(Cb)*(G_b(ind_z_list,:))+diag(Ca)*G2(ind_z_list,:)-diag(Ca)*G1(ind_z_list,:)-diag(Ca)*G_a(ind_z_list,:);
 
